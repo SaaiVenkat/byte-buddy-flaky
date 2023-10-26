@@ -607,8 +607,9 @@ public abstract class AbstractMethodDescriptionTest {
     public void testExceptions() throws Exception {
         assertThat(describe(firstMethod).getExceptionTypes(),
                 is((TypeList.Generic) new TypeList.Generic.ForLoadedTypes(firstMethod.getExceptionTypes())));
+        TypeList.Generic secondMethodExceptionTypes = new TypeList.Generic.ForLoadedTypes(secondMethod.getExceptionTypes());
         assertThat(describe(secondMethod).getExceptionTypes(),
-                is((TypeList.Generic) new TypeList.Generic.ForLoadedTypes(secondMethod.getExceptionTypes())));
+                hasItems(secondMethodExceptionTypes.get(0), secondMethodExceptionTypes.get(1)));
         assertThat(describe(thirdMethod).getExceptionTypes(),
                 is((TypeList.Generic) new TypeList.Generic.ForLoadedTypes(thirdMethod.getExceptionTypes())));
         assertThat(describe(firstConstructor).getExceptionTypes(),
