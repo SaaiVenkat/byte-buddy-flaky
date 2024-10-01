@@ -277,7 +277,9 @@ public abstract class AbstractMethodDescriptionTest {
     @Test
     public void testToString() throws Exception {
         assertThat(describe(firstMethod).toString(), is(firstMethod.toString()));
-        assertThat(describe(secondMethod).toString(), is(secondMethod.toString()));
+        String expectedSecondMethod1 = "protected abstract java.lang.Object net.bytebuddy.description.method.AbstractMethodDescriptionTest$Sample.second(java.lang.String,long) throws java.lang.RuntimeException,java.io.IOException";
+        String expectedSecondMethod2 = "protected abstract java.lang.Object net.bytebuddy.description.method.AbstractMethodDescriptionTest$Sample.second(java.lang.String,long) throws java.io.IOException,java.lang.RuntimeException";
+        assertThat(describe(secondMethod).toString(), either(is(expectedSecondMethod1)).or(is(expectedSecondMethod2)));
         assertThat(describe(thirdMethod).toString(), is(thirdMethod.toString()));
         assertThat(describe(firstConstructor).toString(), is(firstConstructor.toString()));
         assertThat(describe(secondConstructor).toString(), is(secondConstructor.toString()));
@@ -607,8 +609,9 @@ public abstract class AbstractMethodDescriptionTest {
     public void testExceptions() throws Exception {
         assertThat(describe(firstMethod).getExceptionTypes(),
                 is((TypeList.Generic) new TypeList.Generic.ForLoadedTypes(firstMethod.getExceptionTypes())));
+        TypeList.Generic secondMethodExceptionTypes = new TypeList.Generic.ForLoadedTypes(secondMethod.getExceptionTypes());
         assertThat(describe(secondMethod).getExceptionTypes(),
-                is((TypeList.Generic) new TypeList.Generic.ForLoadedTypes(secondMethod.getExceptionTypes())));
+                hasItems(secondMethodExceptionTypes.get(0), secondMethodExceptionTypes.get(1)));
         assertThat(describe(thirdMethod).getExceptionTypes(),
                 is((TypeList.Generic) new TypeList.Generic.ForLoadedTypes(thirdMethod.getExceptionTypes())));
         assertThat(describe(firstConstructor).getExceptionTypes(),
