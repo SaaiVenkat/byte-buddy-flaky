@@ -37,6 +37,7 @@ import java.lang.reflect.Method;
 import java.lang.reflect.TypeVariable;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Comparator;
 import java.util.List;
 
 /**
@@ -1007,12 +1008,22 @@ public interface TypeList extends FilterableList<TypeDescription, TypeList> {
                     this.method = method;
                     this.index = index;
                     this.erasure = erasure;
+                    Arrays.sort(erasure, new Comparator<Class<?>>() {
+                        public int compare(Class<?> c1, Class<?> c2) {
+                            return c1.getName().compareTo(c2.getName());
+                        }
+                    });
                 }
 
                 @Override
                 @CachedReturnPlugin.Enhance("resolved")
                 protected TypeDescription.Generic resolve() {
                     java.lang.reflect.Type[] type = method.getGenericExceptionTypes();
+                    Arrays.sort(type, new Comparator<java.lang.reflect.Type>() {
+                        public int compare(java.lang.reflect.Type td1, java.lang.reflect.Type td2) {
+                            return td1.getTypeName().compareTo(td2.getTypeName());
+                        }
+                    });
                     return erasure.length == type.length
                             ? Sort.describe(type[index], getAnnotationReader())
                             : asRawType();
